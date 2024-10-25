@@ -38,8 +38,8 @@
 
             <!-- Nếu có thông báo, hiển thị thẻ span với số lượng thông báo, nếu không thì không hiển thị -->
             <?php if ($notificationCount > 0): ?>
-            <span
-                class="badge <?php echo (session()->has('success')) ? 'bg-success' : ''; ?>"><?php echo $notificationCount; ?></span>
+                <span
+                    class="badge <?php echo (session()->has('success')) ? 'bg-success' : ''; ?>"><?php echo $notificationCount; ?></span>
             <?php endif; ?>
         </a>
 
@@ -59,17 +59,17 @@
                 <!-- item thông báo từ PHP-->
                 <div id="notifications-list">
                     <?php if (session()->has('success')): ?>
-                    <p class="dropdown-item text-center text-success notify-item">
-                        <?php echo e(session('success')); ?>
-                    </p>
+                        <p class="dropdown-item text-center text-success notify-item">
+                            <?php echo e(session('success')); ?>
+                        </p>
                     <?php endif; ?>
                     <?php if (session()->has('error')): ?>
-                    <p class="dropdown-item text-center text-danger notify-item">
-                        <?php echo e(session('error')); ?>
-                    </p>
+                        <p class="dropdown-item text-center text-danger notify-item">
+                            <?php echo e(session('error')); ?>
+                        </p>
                     <?php endif; ?>
                     <?php if (!session()->has('success') && !session()->has('error')): ?>
-                    <p class="dropdown-item text-center text-success notify-item notify-all">Không có thông báo nào</p>
+                        <p class="dropdown-item text-center text-success notify-item notify-all">Không có thông báo nào</p>
                     <?php endif; ?>
                 </div>
 
@@ -82,39 +82,40 @@
             <a href="#" class="dropdown-item text-center text-primary notify-item notify-all">
                 Xem tất cả
             </a>
-            <!-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                data-bs-target="#right-modal">Rightbar Modal</button> -->
         </div>
+    </li>
 
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const clearNotificationsButton = document.getElementById('clear-notifications');
             const notificationsList = document.getElementById('notifications-list');
             const noNotificationsMessage = document.querySelector('.notify-none');
-            const notificationBadge = document.querySelector('.noti-icon-badge');
+            const notificationBadge = document.querySelector('.badge');
+            const notifyAllMessage = document.querySelector('.notify-all');
 
             clearNotificationsButton.addEventListener('click', function() {
-                // Ẩn tất cả thông báo cũ
+                // Xóa tất cả thông báo hiện tại
                 notificationsList.innerHTML = '';
 
                 // Hiển thị thông báo "Không có thông báo nào"
                 noNotificationsMessage.style.display = 'block';
 
-                // Ẩn thẻ span nếu không có thông báo
+                // Cập nhật lại badge thông báo (số lượng thông báo)
                 notificationBadge.style.display = 'none';
+
+                // Cập nhật trạng thái của thông báo "Xem tất cả"
+                // notifyAllMessage.textContent = "Không có thông báo nào";
             });
 
             // Kiểm tra số lượng thông báo để cập nhật thẻ span
-            const notificationCount = <?php echo $notificationCount; ?>;
+            const notificationCount = <?php echo $notificationCount; ?>; // Giá trị từ backend PHP
             if (notificationCount === 0) {
                 notificationBadge.style.display = 'none'; // Ẩn thẻ span nếu không có thông báo
             } else {
                 notificationBadge.style.display = 'inline-block'; // Hiển thị thẻ span nếu có thông báo
             }
         });
-        </script>
-    </li>
-
+    </script>
 
     <li class="dropdown notification-list d-none d-sm-inline-block">
         <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"

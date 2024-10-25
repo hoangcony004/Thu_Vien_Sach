@@ -33,7 +33,7 @@
                     <a href="{{ route('theloai') }}">Thể Loại</a>
                 </li>
                 <li>
-                    <a href="apps-ecommerce-customers.html">Nhà Xuất Bản</a>
+                    <a href="{{ route('nhaXuatBan') }}">Nhà Xuất Bản</a>
                 </li>
                 <li>
                     <a href="apps-ecommerce-shopping-cart.html">Shopping Cart</a>
@@ -77,7 +77,7 @@
         </div>
     </li> -->
 
-    <li class="side-nav-item">
+        <!-- <li class="side-nav-item">
         <a data-bs-toggle="collapse" href="#sidebarMultiLevel" aria-expanded="false" aria-controls="sidebarMultiLevel"
             class="side-nav-link">
             <i class="dripicons-graduation"></i>
@@ -160,5 +160,5 @@
                 </li>
             </ul>
         </div>
-    </li>
+    </li> -->
 </ul>

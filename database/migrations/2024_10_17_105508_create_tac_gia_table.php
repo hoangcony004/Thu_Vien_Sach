@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('tenTacGia');
             $table->date('ngaySinh');
-            $table->date('ngaymat');
+            $table->date('ngayMat')->nullable(); // Đảm bảo trường này có thể là null
             $table->string('moTa');
             $table->timestamps();
         });

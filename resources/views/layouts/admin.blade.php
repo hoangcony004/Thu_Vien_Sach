@@ -18,6 +18,9 @@
     <link href="{{ asset('admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="light-style">
     <link href="{{ asset('admin/assets/css/app-dark.min.css') }}" rel="stylesheet" type="text/css" id="dark-style">
+    <!-- Thêm jQuery từ CDN Google -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
     @yield('style')
 
@@ -30,11 +33,11 @@
         <!-- ========== Left Sidebar Start ========== -->
         <div class="leftside-menu">
             <!-- @yield('slidebar') -->
-            @include('admin.fragments.logo')
+            @include('admin.components.logo')
 
             <div class="h-100" id="leftside-menu-container" data-simplebar="">
 
-                @include('admin.fragments.sidemenu')
+                @include('admin.components.sidemenu')
 
                 <!-- End Sidebar -->
 
@@ -53,12 +56,12 @@
                 <!-- Topbar Start -->
                 <!-- @yield('header') -->
                 <div class="navbar-custom">
-                    @include('admin.fragments.header')
+                    @include('admin.components.header')
 
                     <button class="button-menu-mobile open-left">
                         <i class="mdi mdi-menu"></i>
                     </button>
-                    @include('admin.fragments.search')
+                    @include('admin.components.search')
                 </div>
 
                 <!-- end Topbar -->
@@ -77,7 +80,7 @@
             <!-- Footer Start -->
             <footer class="footer">
                 <div class="container-fluid">
-                    @include('admin.fragments.footer')
+                    @include('admin.components.footer')
                 </div>
             </footer>
 
@@ -96,7 +99,7 @@
     <!-- Right Sidebar -->
     <div class="end-bar">
 
-        @include('admin.fragments.rightbar')
+        @include('admin.components.rightbar')
 
     </div>
 
