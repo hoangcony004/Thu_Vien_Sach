@@ -81,17 +81,22 @@
                                     @if (empty($theloai->updated_at))
                                     Chưa cập nhật
                                     @else
-                                    {{ \Carbon\Carbon::parse($tacgia->updated_at)->format('d/m/Y') }}
+                                    {{ \Carbon\Carbon::parse($theloai->updated_at)->format('d/m/Y') }}
                                     @endif
                                 </td>
 
                                 <td class="table-action">
-                                    <a href="javascript:void(0);" class="action-icon"> <i
-                                            class="mdi mdi-square-edit-outline"></i></a>
-                                    <a href="javascript:void(0);" class="action-icon"> <i
-                                            class="mdi mdi-delete"></i></a>
-                                </td>
+                                    <!-- Thẻ a cho nút sửa -->
+                                    <a href="{{ route('editTheLoai', ['id' => $theloai->id]) }}" class="action-icon">
+                                        <i class="mdi mdi-square-edit-outline"></i>
+                                    </a>
 
+                                    <!-- Thẻ a để mở modal và truyền id -->
+                                    <a href="#" class="action-icon" data-id="{{ $theloai->id }}" data-bs-toggle="modal"
+                                        data-bs-target="#danger-header-modal">
+                                        <i class="mdi mdi-delete"></i>
+                                    </a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -107,6 +112,9 @@
 
 <!-- Modal -->
 @include('admin.partials.theloai.form-add-the-loai')
+@include('admin.partials.theloai.form-delete-the-loai')
+
+
 
 <!-- end modal-->
 @endsection

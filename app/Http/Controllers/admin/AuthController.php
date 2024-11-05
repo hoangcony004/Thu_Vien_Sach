@@ -5,16 +5,24 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NotificationService; // Thêm dòng này để sử dụng NotificationService
 
 class AuthController extends Controller
 {
     protected $title;
+    
+    protected $notificationService; // Khai báo service thông báo
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService; // Khởi tạo service thông báo
+    }
 
     public function index(Request $request) {}
 
     public function getLogin()
     {
-        // khai báo title
+        // Khai báo title
         $this->title = 'Admin - Login';
 
         // Lấy URL người dùng truy cập trước khi vào trang login
@@ -26,13 +34,13 @@ class AuthController extends Controller
             session()->put('url.intended', $previousUrl);
         }
 
-        // chuyển hướng và truyền thông báo xuống
+        // Chuyển hướng và truyền thông báo xuống
         return view('admin.auth.login-admin')->with('title', $this->title);
     }
 
     public function postLogin(Request $request)
     {
-        // kiểm duyệt dữ liệu với thông báo lỗi tùy chỉnh
+        // Kiểm duyệt dữ liệu với thông báo lỗi tùy chỉnh
         $request->validate([
             'username' => 'required',
             'password' => 'required',
@@ -48,13 +56,16 @@ class AuthController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            session()->flash('success', 'Đăng nhập thành công!');
+            // Sử dụng NotificationService để gửi thông báo cho đăng nhập thành công
+            $this->notificationService->addNotification('Đăng nhập thành công!', 'success');
+
             $user = Auth::user();
             session(['name' => $user->name]);
             session(['role' => $user->role]);
             // Lấy URL đã lưu trước khi đăng nhập hoặc chuyển hướng đến dashboard nếu không có
             return redirect()->intended(route('dashboard'));
         } else {
+            // Thông báo lỗi giữ nguyên cách cũ
             session()->flash('error', 'Sai tên đăng nhập hoặc mật khẩu!');
             return redirect()->back()->withInput();
         }
@@ -64,12 +75,11 @@ class AuthController extends Controller
         return redirect()->back()->withInput(); // Giữ lại các giá trị đã nhập
     }
 
-
     public function getlogout()
     {
         Auth::logout(); // Đăng xuất người dùng
 
-        // truyền thông báo xuống
+        // Sử dụng NotificationService để gửi thông báo cho đăng xuất thành công
         session()->flash('success', 'Đăng xuất thành công.');
         return redirect()->route('login'); // Chuyển hướng đến trang đăng nhập
     }

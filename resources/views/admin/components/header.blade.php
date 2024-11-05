@@ -18,104 +18,97 @@
             aria-haspopup="false" aria-expanded="false">
             <i class="dripicons-bell noti-icon"></i>
 
-            <!-- Hiển thị số lượng thông báo hoặc ẩn thẻ nếu không có thông báo -->
             <?php
-            // Đếm số lượng thông báo thành công (success) và lỗi (error)
-            $notificationCount = 0;
-
-            // Kiểm tra xem có thông báo thành công hay lỗi trong session không
-            if (session()->has('success') || session()->has('error')) {
-                // Tính số lượng thông báo thành công và lỗi
-                $notificationCount = 0;
-                if (session()->has('success')) {
-                    $notificationCount++;
-                }
-                if (session()->has('error')) {
-                    $notificationCount++;
-                }
-            }
+            $notifications = session('notifications', []);
+            $notificationCount = count($notifications);
             ?>
 
-            <!-- Nếu có thông báo, hiển thị thẻ span với số lượng thông báo, nếu không thì không hiển thị -->
             <?php if ($notificationCount > 0): ?>
-                <span
-                    class="badge <?php echo (session()->has('success')) ? 'bg-success' : ''; ?>"><?php echo $notificationCount; ?></span>
+            <span class="badge bg-success"><?php echo $notificationCount; ?></span>
             <?php endif; ?>
         </a>
 
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg">
-            <!-- item-->
             <div class="dropdown-item noti-title">
                 <h5 class="m-0">
                     <span class="float-end">
-                        <a href="javascript: void(0);" class="text-dark" id="clear-notifications">
+                        <a href="javascript:void(0);" class="text-dark" id="clear-notifications">
                             <small>Xóa tất cả</small>
                         </a>
                     </span>Thông báo
                 </h5>
             </div>
 
-            <div style="max-height: 230px;" data-simplebar="">
-                <!-- item thông báo từ PHP-->
+            <!-- Thay đổi phần này để hỗ trợ cuộn -->
+            <div style="max-height: 230px; overflow-y: auto;" data-simplebar>
                 <div id="notifications-list">
-                    <?php if (session()->has('success')): ?>
-                        <p class="dropdown-item text-center text-success notify-item">
-                            <?php echo e(session('success')); ?>
-                        </p>
-                    <?php endif; ?>
-                    <?php if (session()->has('error')): ?>
-                        <p class="dropdown-item text-center text-danger notify-item">
-                            <?php echo e(session('error')); ?>
-                        </p>
-                    <?php endif; ?>
-                    <?php if (!session()->has('success') && !session()->has('error')): ?>
-                        <p class="dropdown-item text-center text-success notify-item notify-all">Không có thông báo nào</p>
+                    <?php
+                    // Đảo ngược mảng thông báo để hiển thị thông báo mới nhất lên trên cùng
+                    $notifications = array_reverse($notifications);
+                    ?>
+                    <?php if ($notificationCount > 0): ?>
+                    <?php foreach ($notifications as $notification): ?>
+                    <p
+                        class="dropdown-item text-center notify-item <?php echo $notification['type'] === 'success' ? 'text-success' : 'text-danger'; ?>">
+                        <?php echo e($notification['message']); ?>
+                    </p>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <p class="dropdown-item text-center notify-item notify-all">Không có thông báo nào</p>
                     <?php endif; ?>
                 </div>
-
-                <!-- item khi không còn thông báo -->
-                <p class="dropdown-item text-center text-success notify-item notify-none" style="display:none;">Không có
-                    thông báo nào</p>
             </div>
 
-            <!-- All-->
-            <a href="#" class="dropdown-item text-center text-primary notify-item notify-all">
+            <a href="#" class="dropdown-item text-center text-primary notify-item notify-all"
+                id="view-all-notifications">
                 Xem tất cả
             </a>
+
         </div>
     </li>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const clearNotificationsButton = document.getElementById('clear-notifications');
-            const notificationsList = document.getElementById('notifications-list');
-            const noNotificationsMessage = document.querySelector('.notify-none');
-            const notificationBadge = document.querySelector('.badge');
-            const notifyAllMessage = document.querySelector('.notify-all');
+    document.addEventListener('DOMContentLoaded', function() {
+        const clearNotificationsButton = document.getElementById('clear-notifications');
+        const notificationsList = document.getElementById('notifications-list');
+        const noNotificationsMessage = document.querySelector('.notify-all');
+        const notificationBadge = document.querySelector('.badge'); // Thẻ badge hiển thị số lượng thông báo
 
-            clearNotificationsButton.addEventListener('click', function() {
-                // Xóa tất cả thông báo hiện tại
-                notificationsList.innerHTML = '';
+        clearNotificationsButton.addEventListener('click', function() {
+            // Gửi yêu cầu xóa tất cả thông báo
+            fetch('/clear-notifications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Đảm bảo thêm CSRF token nếu đang sử dụng Laravel
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Xóa tất cả thông báo hiện tại
+                        notificationsList.innerHTML = '';
 
-                // Hiển thị thông báo "Không có thông báo nào"
-                noNotificationsMessage.style.display = 'block';
+                        // Hiển thị thông báo "Không có thông báo nào"
+                        noNotificationsMessage.textContent = "Không có thông báo nào";
+                        noNotificationsMessage.style.display = 'block';
 
-                // Cập nhật lại badge thông báo (số lượng thông báo)
-                notificationBadge.style.display = 'none';
-
-                // Cập nhật trạng thái của thông báo "Xem tất cả"
-                // notifyAllMessage.textContent = "Không có thông báo nào";
-            });
-
-            // Kiểm tra số lượng thông báo để cập nhật thẻ span
-            const notificationCount = <?php echo $notificationCount; ?>; // Giá trị từ backend PHP
-            if (notificationCount === 0) {
-                notificationBadge.style.display = 'none'; // Ẩn thẻ span nếu không có thông báo
-            } else {
-                notificationBadge.style.display = 'inline-block'; // Hiển thị thẻ span nếu có thông báo
-            }
+                        // Cập nhật số lượng thông báo về trạng thái mặc định (ẩn thẻ span nếu không có thông báo)
+                        notificationBadge.style.display = 'none'; // Ẩn thẻ badge
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         });
+
+        // Cập nhật hiển thị badge khi trang được tải
+        if (<?php echo $notificationCount; ?> === 0) {
+            notificationBadge.style.display = 'none'; // Ẩn thẻ span nếu không có thông báo
+        } else {
+            notificationBadge.style.display = 'inline-block'; // Hiển thị thẻ span nếu có thông báo
+        }
+    });
     </script>
+
 
     <li class="dropdown notification-list d-none d-sm-inline-block">
         <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"

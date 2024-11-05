@@ -5,10 +5,17 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TacGia;
+use App\Services\NotificationService; // Thêm dòng này để sử dụng NotificationService
 
 class TacGiaController extends Controller
 {
     protected $title;
+    protected $notificationService; // Khai báo service thông báo
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService; // Khởi tạo service thông báo
+    }
 
     public function index(Request $request) {}
 
@@ -26,8 +33,7 @@ class TacGiaController extends Controller
             ->with('tacgiaList', $tacgiaList);
     }
 
-
-    public function postTacGia(Request $request)
+    public function postAddTacGia(Request $request)
     {
         // Validate dữ liệu đầu vào
         $request->validate([
@@ -37,7 +43,6 @@ class TacGiaController extends Controller
             'moTa' => 'nullable|string',
         ]);
 
-        // dd($request);
         // Lưu dữ liệu vào cơ sở dữ liệu
         TacGia::create([
             'tenTacGia' => $request->tenTacGia,
@@ -48,72 +53,30 @@ class TacGiaController extends Controller
             'created_at' => now(),
         ]);
 
-        // Chuyển hành trang
-        return redirect()->route('tacgia')
-            ->with('success', 'Tác giả đã được thêm thành công!');
+        // Sử dụng NotificationService để gửi thông báo
+        $this->notificationService->addNotification('Tác giả đã được thêm thành công!', 'success');
+
+        return redirect()->route('tacgia');
     }
 
-    public function getXemTacGia($id)
+    public function postDeleteTacGia($id)
     {
         // Tìm tác giả theo ID
         $tacgia = TacGia::find($id);
 
-        // Nếu tác giả không tồn tại, trả về lỗi
+        // Nếu tác giả không tồn tại, trả về lỗi và thông báo
         if (!$tacgia) {
-            return response()->json(['error' => 'Tác giả không tồn tại!'], 404);
-        }
-
-        // Trả về view với dữ liệu tác giả
-        return view('admin.partials.tacgia.form-show-tac-gia', compact('tacgia'));
-    }
-
-    public function putTacGia(Request $request, $id)
-    {
-        // Validate dữ liệu đầu vào
-        $request->validate([
-            'tenTacGia' => 'required|string|max:255',
-            'ngaySinh' => 'required|date',
-            'ngayMat' => 'nullable|date|after_or_equal:ngaySinh',
-            'moTa' => 'nullable|string',
-        ]);
-
-        // Tìm tác giả theo ID
-        $tacgia = TacGia::find($id);
-
-        // Nếu tác giả không tồn tại, trả về lỗi
-        if (!$tacgia) {
-            return response()->json(['error' => 'Tác giả không tồn tại!'], 404);
-        }
-
-        // Lưu dữ liệu vào cơ sở dữ liệu
-        $tacgia->update([
-            'tenTacGia' => $request->tenTacGia,
-            'ngaySinh' => $request->ngaySinh,
-            'ngayMat' => $request->ngayMat ? $request->ngayMat : null,
-            'moTa' => $request->moTa,
-            'updated_at' => now(),
-        ]);
-
-        // Chuyển hành trang
-        return redirect()->route('tacgia')
-            ->with('success', 'Tác giả đã được cập nhật thành công!');
-    }
-
-    public function postXoaTacGia($id)
-    {
-        // Tìm tác giả theo ID
-        $tacgia = TacGia::find($id);
-
-        // Nếu tác giả không tồn tại, trả về lỗi
-        if (!$tacgia) {
-            return response()->json(['error' => 'Tác giả không tồn tại!'], 404);
+            // Gọi hàm addNotification từ service để gửi thông báo
+            $this->notificationService->addNotification('Không tìm thấy tác giả cần xóa!', 'error');
+            return redirect()->route('tacgia');
         }
 
         // Xóa tác giả
         $tacgia->delete();
 
-        // Chuyển hành trang
-        return redirect()->route('tacgia')
-            ->with('success', 'Tác giả đã được xóa thành công!');
+        // Sử dụng NotificationService để gửi thông báo
+        $this->notificationService->addNotification('Tác giả đã được xóa thành công!', 'success');
+
+        return redirect()->route('tacgia');
     }
 }

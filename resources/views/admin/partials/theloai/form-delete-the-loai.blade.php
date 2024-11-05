@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header modal-colored-header bg-danger">
-                <h4 class="modal-title" id="danger-header-modalLabel">Xóa Tác Giả
+                <h4 class="modal-title" id="danger-header-modalLabel">Xóa Thể Loại
                 </h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
             </div>
@@ -30,12 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteModal.addEventListener('show.bs.modal', function(event) {
         // Lấy thẻ a đã được nhấn để mở modal
         var button = event.relatedTarget;
-        var Id = button.getAttribute('data-id');
+        var theLoaiId = button.getAttribute('data-id');
 
         // Cập nhật action của form để bao gồm prefix '/public/admin/the-loai/xoa-the-loai'
         var form = document.getElementById('delete-form');
         form.action =
-            `/public/admin/tac-gia/tac-gia-xoa/${Id}`;
+            `/public/admin/the-loai/xoa-the-loai/${theLoaiId}`;
     });
 });
 </script>

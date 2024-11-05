@@ -89,88 +89,10 @@
 
                                 <td>{{ $tacgia->moTa }}</td>
                                 <td class="table-action">
-                                    <!-- Nút Xem Tác Giả -->
-                                    <a type="button" class="action-icon" data-toggle="modal" data-target="#modalXem"
-                                        data-id="{{ $tacgia->id }}">
-                                        <i class="mdi mdi-eye"></i>
-                                    </a>
 
-                                    <!-- Modal Xem Tác Giả -->
-                                    <div class="modal" id="modalXem{{ $tacgia->id }}">
-
-                                        <div class="modal-dialog modal-xl">
-                                            <div class="modal-content">
-                                                <!-- Modal Body -->
-                                                <div class="modal-body">
-                                                    <!-- Nội dung modal sẽ được load từ server khi mở modal -->
-                                                </div>
-
-                                                <!-- Modal Footer -->
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger"
-                                                        data-bs-dismiss="modal"><i class="bi-x"></i>Close</button>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- JavaScript để load dữ liệu khi mở modal -->
-                                    <script>
-                                        $(document).ready(function() {
-                                            // Khi nút "Xem" được bấm, hiển thị modal và tải dữ liệu
-                                            $('a[data-toggle="modal"]').on('click', function() {
-                                                var id = $(this).data(
-                                                    'id'); // Lấy ID từ data-id của nút "Xem"
-                                                var modalId = '#modalXem' +
-                                                    id; // Xác định ID của modal tương ứng
-
-                                                // console.log("ID tác giả: ",
-                                                //     id); // Kiểm tra ID trong console
-
-                                                if (id) {
-                                                    // Tải dữ liệu vào modal
-                                                    $(modalId + ' .modal-body').load(
-                                                        "{{ route('xemTacGia', '') }}/" + id,
-                                                        function(response, status, xhr) {
-                                                            if (status == "error") {
-                                                                console.error(
-                                                                    "Có lỗi khi tải nội dung từ server: " +
-                                                                    xhr.status + " " + xhr
-                                                                    .statusText);
-                                                            } else {
-                                                                $(modalId).modal(
-                                                                    'show'
-                                                                ); // Hiển thị modal sau khi tải nội dung
-                                                            }
-                                                        });
-                                                } else {
-                                                    console.error("Không tìm thấy ID tác giả!");
-                                                }
-                                            });
-                                        });
-                                    </script>
-
-                                    <!-- Trigger button -->
-                                    <a type="button" class="action-icon" data-toggle="modal" data-target="#modalXoa"
-                                        href="#modalXoa" data-id="{{ $tacgia->id }}">
+                                    <a href="#" class="action-icon" data-id="{{ $tacgia->id }}" data-bs-toggle="modal"
+                                        data-bs-target="#danger-header-modal">
                                         <i class="mdi mdi-delete"></i>
-                                    </a>
-
-                                    <!-- JavaScript -->
-                                    <script>
-                                        $('#modalXoa').on('show.bs.modal', function(e) {
-                                            var id = $(e.relatedTarget).data('id');
-                                            console.log("ID nhận được: ", id);
-
-                                            // Cập nhật giá trị id vào input ẩn
-                                            $('#idInput').val(id);
-
-                                            // Cập nhật action của form để bao gồm id
-                                            var formAction = "{{ url('public/admin/tac-gia-xoa') }}/" + id;
-                                            $('#formXoa').attr('action', formAction);
-                                        });
-                                    </script>
 
                                 </td>
                             </tr>

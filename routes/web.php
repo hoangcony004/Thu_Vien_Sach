@@ -28,20 +28,27 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'public/admin'], function () {
         Route::get('/dashboard', [AdminController::class, 'getDashboard'])->name('dashboard');
         Route::get('/sach', [SachController::class, 'getBooks'])->name('books');
-        
+
         Route::get('/tac-gia', [TacGiaController::class, 'getTacGia'])->name('tacgia');
-        Route::post('/post-tac-gia', [TacGiaController::class, 'postTacGia'])->name('Ptacgia');
-        Route::get('/tac-gia-xem/{id}', [TacGiaController::class, 'getXemTacGia'])->name('xemTacGia');
-        Route::post('/tac-gia-xoa/{id}', [TacGiaController::class, 'postXoaTacGia'])->name('xoaTacGia');
-        
+        Route::post('/post-tac-gia', [TacGiaController::class, 'postAddTacGia'])->name('Ptacgia');
+        Route::post('/tac-gia/tac-gia-xoa/{id}', [TacGiaController::class, 'postDeleteTacGia'])->name('xoaTacGia');
+
         Route::get('/the-loai', [TheLoaiController::class, 'getTheLoai'])->name('theloai');
-        Route::post('/add-the-loai', [TheLoaiController::class, 'postAddTheLoai'])->name('addTheLoai');
+        Route::post('/the-loai/add-the-loai', [TheLoaiController::class, 'postAddTheLoai'])->name('addTheLoai');
+        Route::get('/the-loai/edit-the-loai/{id}', [TheLoaiController::class, 'getEditTheLoai'])->name('editTheLoai');
+        Route::post('/the-loai/edit-the-loai/{id}', [TheLoaiController::class, 'postEditTheLoai'])->name('PEditTheLoai');
+        Route::post('/the-loai/xoa-the-loai/{id}', [TheLoaiController::class, 'postDeleteTheLoai'])->name('xoaTheLoai');
+
 
         Route::get('/nha-xuat-ban', [NhaXuatBanController::class, 'getNhaXuatBan'])->name('nhaXuatBan');
 
 
         Route::post('/sach', [SachController::class, 'postBooks'])->name('Psach');
         Route::post('/the-loai', [TheLoaiController::class, 'postTheLoai'])->name('Ptheloai');
-        
     });
+});
+
+Route::post('/clear-notifications', function () {
+    session(['notifications' => []]); // Xóa tất cả thông báo trong session
+    return response()->json(['success' => true]);
 });
