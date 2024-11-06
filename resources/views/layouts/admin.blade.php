@@ -96,12 +96,7 @@
     </div>
     <!-- END wrapper -->
 
-    <!-- Right Sidebar -->
-    <div class="end-bar">
 
-        @include('admin.components.rightbar')
-
-    </div>
 
     <div class="rightbar-overlay"></div>
     <!-- /End-bar -->

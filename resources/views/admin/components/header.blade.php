@@ -59,11 +59,10 @@
                 </div>
             </div>
 
-            <a href="#" class="dropdown-item text-center text-primary notify-item notify-all"
-                id="view-all-notifications">
-                Xem tất cả
+            <a href="javascript:void(0);"
+                class="dropdown-item text-center text-primary notify-item notify-all end-bar-toggle">
+                Xem Tất Cả
             </a>
-
         </div>
     </li>
 
@@ -145,11 +144,11 @@
         </div>
     </li>
 
-    <li class="notification-list">
+    <!-- <li class="notification-list">
         <a class="nav-link end-bar-toggle" href="javascript: void(0);">
             <i class="dripicons-gear noti-icon"></i>
         </a>
-    </li>
+    </li> -->
 
     <li class="dropdown notification-list">
         <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button"
@@ -227,3 +226,5 @@
         </div>
     </div>
 </div>
+
+@include('admin.components.notifications')

@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\SachController;
 use App\Http\Controllers\admin\TacGiaController;
 use App\Http\Controllers\admin\TheLoaiController;
 use App\Http\Controllers\admin\NhaXuatBanController;
+// use App\Http\Controllers\NotificationController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,9 @@ use App\Http\Controllers\admin\NhaXuatBanController;
 |
 */
 
+Route::get('/', function () {
+    return view('admin.pages.home-page');
+});
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'postLogin']);
 Route::get('/logout', [AuthController::class, 'getlogout'])->name('logout');
@@ -30,8 +34,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/sach', [SachController::class, 'getBooks'])->name('books');
 
         Route::get('/tac-gia', [TacGiaController::class, 'getTacGia'])->name('tacgia');
-        Route::post('/post-tac-gia', [TacGiaController::class, 'postAddTacGia'])->name('Ptacgia');
+        Route::post('/post-add-tac-gia', [TacGiaController::class, 'postAddTacGia'])->name('Ptacgia');
+        Route::get('/tac-gia/edit-tac-gia/{id}', [TacGiaController::class, 'getEditTacGia'])->name('editTacGia');
+        Route::put('/tac-gia/edit-tac-gia/{id}', [TacGiaController::class, 'postEditTacGia'])->name('PEditTacGia');
         Route::post('/tac-gia/tac-gia-xoa/{id}', [TacGiaController::class, 'postDeleteTacGia'])->name('xoaTacGia');
+        Route::get('/tac-gia/search-tac-gia', [TacGiaController::class, 'getTacGia'])->name('searchTacGia');
 
         Route::get('/the-loai', [TheLoaiController::class, 'getTheLoai'])->name('theloai');
         Route::post('/the-loai/add-the-loai', [TheLoaiController::class, 'postAddTheLoai'])->name('addTheLoai');

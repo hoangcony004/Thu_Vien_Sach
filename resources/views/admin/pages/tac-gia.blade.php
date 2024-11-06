@@ -34,16 +34,23 @@
                             <!-- <button type="button" class="btn btn-light mb-2 me-1">Import</button> -->
                             <!-- <button type="button" class="btn btn-success mb-2">Xuất Excel</button> -->
 
-                            <form action="" method="GET" class="d-flex justify-content-end">
+                            <form action="{{ route('searchTacGia') }}" method="GET" class="d-flex justify-content-end">
                                 <input type="search" name="query" class="form-control form-control-sm me-2"
-                                    placeholder="Nhập tên tác giả..." style="max-width: 200px;">
+                                    placeholder="Nhập tên tác giả..." style="max-width: 200px;"
+                                    value="{{ request()->query('query') }}">
                                 <button class="btn btn-primary btn-sm" type="submit">Tìm kiếm</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
 
                 <div class="table-responsive">
+                    @if($tacgiaList->isEmpty())
+                    <p style="display: flex; justify-content: center; font-size: 28px;">Không tìm thấy tác giả nào với
+                        tên
+                        '{{ $query }}'.</p>
+                    @else
                     <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                         <thead class="table-light">
                             <tr>
@@ -87,8 +94,12 @@
                                     @endif
                                 </td>
 
-                                <td>{{ $tacgia->moTa }}</td>
+                                <td>{{ strlen($tacgia->moTa) > 50 ? substr($tacgia->moTa, 0, 50) . '...' : $tacgia->moTa }}
+                                </td>
                                 <td class="table-action">
+                                    <a href="{{ route('editTacGia', ['id' => $tacgia->id]) }}" class="action-icon">
+                                        <i class="mdi mdi-square-edit-outline"></i>
+                                    </a>
 
                                     <a href="#" class="action-icon" data-id="{{ $tacgia->id }}" data-bs-toggle="modal"
                                         data-bs-target="#danger-header-modal">
@@ -99,11 +110,21 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <!-- Phân trang -->
-
+                    @endif
                 </div>
             </div> <!-- end card-body-->
+            <!-- Phân trang -->
+            @if (request()->has('query'))
+            <!-- Nếu có tham số query, sử dụng phân trang với appends -->
+            <!-- Căn giữa phân trang với Bootstrap -->
+            <div class="d-flex justify-content-center">
+                {{ $tacgiaList->appends(['query' => request()->query('query')])->links() }}
+            </div>
+            @else
+            <!-- Nếu không có tham số query, sử dụng phân trang mặc định của bạn -->
             <x-pagination :paginator="$tacgiaList" />
+            @endif
+
         </div> <!-- end card-->
     </div> <!-- end col -->
 </div>

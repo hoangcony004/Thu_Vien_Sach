@@ -1,7 +1,6 @@
 @if ($paginator->hasPages())
 <nav class="pagination-container">
     <ul class="pagination justify-content-center">
-
         {{-- Trang đầu --}}
         <li class="page-item {{ $paginator->onFirstPage() ? 'disabled' : '' }}">
             <a class="page-link" href="{{ $paginator->url(1) }}">Đầu</a>

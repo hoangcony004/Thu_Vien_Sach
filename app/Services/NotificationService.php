@@ -19,7 +19,7 @@ class NotificationService
         ];
 
         // Giới hạn số lượng thông báo
-        if (count($notifications) > 10) {
+        if (count($notifications) > 100) {
             array_shift($notifications); // Xóa thông báo cũ nhất
         }
 
