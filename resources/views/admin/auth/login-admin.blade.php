@@ -35,6 +35,15 @@
                     {!! NoCaptcha::display() !!}
                 </div>
 
+                <div class="inputBox">
+                    <a href="{{ route('password.request') }}"
+                        style="color: #fff; font-size: 16px; text-decoration: none;">Quên
+                        mật
+                        khẩu.
+                    </a>
+
+                </div>
+
                 @if(session()->has('success'))
                 <div class="alert alert-success" style="color: #6bff33; font-size: 14px;">
                     {{ session('success') }}

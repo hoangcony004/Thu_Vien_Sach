@@ -63,6 +63,7 @@
                 class="dropdown-item text-center text-primary notify-item notify-all end-bar-toggle">
                 Xem Tất Cả
             </a>
+
         </div>
     </li>
 

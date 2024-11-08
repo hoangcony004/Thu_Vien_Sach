@@ -7,7 +7,8 @@ use App\Http\Controllers\admin\SachController;
 use App\Http\Controllers\admin\TacGiaController;
 use App\Http\Controllers\admin\TheLoaiController;
 use App\Http\Controllers\admin\NhaXuatBanController;
-// use App\Http\Controllers\NotificationController; 
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\admin\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,13 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'postLogin']);
 Route::get('/logout', [AuthController::class, 'getlogout'])->name('logout');
+// Route::get('/reset-password', [AuthController::class, 'getResetPW'])->name('resetPW');
+// Route::post('/reset-password', [AuthController::class, 'postResetPW'])->name('PresetPW');
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
 
 
 Route::group(['middleware' => ['auth']], function () {
@@ -52,8 +60,14 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::post('/sach', [SachController::class, 'postBooks'])->name('Psach');
         Route::post('/the-loai', [TheLoaiController::class, 'postTheLoai'])->name('Ptheloai');
+
+
+        Route::get('/tim-kiem-chuc-nang-he-thong', [SearchController::class, 'index'])->name('search');
     });
 });
+
+
+
 
 Route::post('/clear-notifications', function () {
     session(['notifications' => []]); // Xóa tất cả thông báo trong session

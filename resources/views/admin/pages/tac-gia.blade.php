@@ -47,7 +47,10 @@
 
                 <div class="table-responsive">
                     @if($tacgiaList->isEmpty())
-                    <p style="display: flex; justify-content: center; font-size: 28px;">Không tìm thấy tác giả nào với
+                    <p style="display: flex; justify-content: center; font-size: 32px; color: red;">Không tìm thấy tác
+                        giả
+                        nào
+                        với
                         tên
                         '{{ $query }}'.</p>
                     @else

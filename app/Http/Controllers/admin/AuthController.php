@@ -10,7 +10,7 @@ use App\Services\NotificationService; // Thêm dòng này để sử dụng Noti
 class AuthController extends Controller
 {
     protected $title;
-    
+
     protected $notificationService; // Khai báo service thông báo
 
     public function __construct(NotificationService $notificationService)
@@ -83,4 +83,6 @@ class AuthController extends Controller
         session()->flash('success', 'Đăng xuất thành công.');
         return redirect()->route('login'); // Chuyển hướng đến trang đăng nhập
     }
+
+
 }
