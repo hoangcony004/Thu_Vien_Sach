@@ -58,111 +58,73 @@
                                         <label class="form-check-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </th>
-                                <th class="all">Product</th>
-                                <th>Category</th>
-                                <th>Added Date</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Status</th>
+                                <th>STT</th>
+                                <th>Mã Sách</th>
+                                <th class="all">Tên Sách</th>
+                                <th>Tác Giả</th>
+                                <th>Nhà Xuất Bản</th>
+                                <th>Thể Loại</th>
+                                <th>Mô Tả</th>
                                 <th style="width: 85px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($sachList as $index => $sach)
                             <tr>
+                                <!-- Cột checkbox -->
                                 <td>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="customCheck2">
-                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                        <input type="checkbox" class="form-check-input"
+                                            id="customCheck{{ $index + 2 }}">
+                                        <label class="form-check-label" for="customCheck{{ $index + 2 }}">&nbsp;</label>
                                     </div>
                                 </td>
-                                <td>
-                                    <img src="assets/images/products/product-1.jpg" alt="contact-img"
-                                        title="contact-img" class="rounded me-3" height="48">
-                                    <p class="m-0 d-inline-block align-middle font-16">
-                                        <a href="apps-ecommerce-products-details.html" class="text-body">Amazing Modern
-                                            Chair</a>
-                                        <br>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                    </p>
-                                </td>
-                                <td>
-                                    Aeron Chairs
-                                </td>
-                                <td>
-                                    09/12/2018
-                                </td>
-                                <td>
-                                    $148.66
-                                </td>
+                                <!-- Cột STT -->
+                                <td>{{ $sachList->firstItem() + $index }}</td>
 
-                                <td>
-                                    254
-                                </td>
-                                <td>
-                                    <span class="badge bg-success">Active</span>
-                                </td>
+                                <!-- Cột Mã Sách -->
+                                <td>{{ $sach->maSach }}</td>
 
+                                <!-- Cột Tên Sách -->
+                                <td>{{ $sach->tenSach }}</td>
+
+                                <!-- Cột Tác Giả -->
+                                <td>{{ $sach->tacGia->tenTacGia }}</td>
+
+                                <!-- Cột Nhà Xuất Bản -->
+                                <td>{{ $sach->nhaXuatBan->tenNhaXuatBan }}</td>
+
+                                <!-- Cột Thể Loại -->
+                                <td>{{ $sach->theLoai->tenTheLoai }}</td>
+
+                                <!-- Cột Mô Tả -->
+                                <td>{{ \Illuminate\Support\Str::limit($sach->moTa, 50) }}</td>
+
+                                <!-- Cột Action -->
                                 <td class="table-action">
-                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                    <a href="javascript:void(0);" class="action-icon"> <i
-                                            class="mdi mdi-square-edit-outline"></i></a>
+                                    <a href="" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                    <a href="" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
                                     <a href="javascript:void(0);" class="action-icon"> <i
                                             class="mdi mdi-delete"></i></a>
                                 </td>
                             </tr>
-
+                            @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div> <!-- end card-body-->
+            <x-pagination :paginator="$sachList" />
         </div> <!-- end card-->
     </div> <!-- end col -->
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-            </div> <!-- end modal header -->
-            <div class="modal-body">
-                <!-- Các ô input điền thông tin -->
-                <form>
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">Tên</label>
-                        <input type="text" class="form-control" id="inputName" placeholder="Nhập tên...">
-                    </div>
+@include('admin.partials.sach.form-add-sach')
+@include('admin.partials.sach.form-edit-sach')
+@include('admin.partials.sach.form-delete-sach')
 
-                    <div class="mb-3">
-                        <label for="inputEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="inputEmail" placeholder="Nhập email...">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="inputPhone" class="form-label">Số điện thoại</label>
-                        <input type="tel" class="form-control" id="inputPhone" placeholder="Nhập số điện thoại...">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="inputAddress" class="form-label">Địa chỉ</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="Nhập địa chỉ...">
-                    </div>
-                </form>
-            </div> <!-- end modal body -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Thêm Mới</button>
-            </div> <!-- end modal footer -->
-        </div> <!-- end modal content-->
-    </div> <!-- end modal dialog-->
-</div> <!-- end modal-->
+<!-- end modal-->
 
 
 @endsection

@@ -27,9 +27,6 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'postLogin']);
 Route::get('/logout', [AuthController::class, 'getlogout'])->name('logout');
-// Route::get('/reset-password', [AuthController::class, 'getResetPW'])->name('resetPW');
-// Route::post('/reset-password', [AuthController::class, 'postResetPW'])->name('PresetPW');
-
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
@@ -39,7 +36,13 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'public/admin'], function () {
         Route::get('/dashboard', [AdminController::class, 'getDashboard'])->name('dashboard');
-        Route::get('/sach', [SachController::class, 'getBooks'])->name('books');
+
+        Route::get('/sach', [SachController::class, 'getSachs'])->name('sach');
+        Route::post('/post-add-sach', [SachController::class, 'postAddSach'])->name('Psach');
+        Route::get('/sach/edit-sach/{id}', [SachController::class, 'getEditSach'])->name('editSach');
+        Route::put('/sach/edit-sach/{id}', [SachController::class, 'postEditSach'])->name('PEditSach');
+        Route::post('/sach/xoa-sach/{id}', [SachController::class, 'postDeleteSach'])->name('xoaSach');
+        Route::get('/sach/search-sach', [SachController::class, 'getBooks'])->name('searchSach');
 
         Route::get('/tac-gia', [TacGiaController::class, 'getTacGia'])->name('tacgia');
         Route::post('/post-add-tac-gia', [TacGiaController::class, 'postAddTacGia'])->name('Ptacgia');
@@ -54,12 +57,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/the-loai/edit-the-loai/{id}', [TheLoaiController::class, 'postEditTheLoai'])->name('PEditTheLoai');
         Route::post('/the-loai/xoa-the-loai/{id}', [TheLoaiController::class, 'postDeleteTheLoai'])->name('xoaTheLoai');
 
-
         Route::get('/nha-xuat-ban', [NhaXuatBanController::class, 'getNhaXuatBan'])->name('nhaXuatBan');
+        Route::post('/nha-xuat-ban/add-nha-xuat-ban', [NhaXuatBanController::class, 'postAddNhaXuatBan'])->name('addNhaXuatBan');
+        Route::get('/nha-xuat-ban/edit-nha-xuat-ban/{id}', [NhaXuatBanController::class, 'getEditNhaXuatBan'])->name('editNhaXuatBan');
+        Route::post('/nha-xuat-ban/edit-nha-xuat-ban/{id}', [NhaXuatBanController::class, 'postEditNhaXuatBan'])->name('PEditNhaXuatBan');
+        Route::post('/nha-xuat-ban/xoa-nha-xuat-ban/{id}', [NhaXuatBanController::class, 'postDeleteNhaXuatBan'])->name('xoaNhaXuatBan');
+        Route::get('/nha-xuat-ban/search-nha-xuat-ban', [NhaXuatBanController::class, 'getNhaXuatBan'])->name('searchNhaXuatBan');
 
-
-        Route::post('/sach', [SachController::class, 'postBooks'])->name('Psach');
-        Route::post('/the-loai', [TheLoaiController::class, 'postTheLoai'])->name('Ptheloai');
 
 
         Route::get('/tim-kiem-chuc-nang-he-thong', [SearchController::class, 'index'])->name('search');
@@ -70,6 +74,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 Route::post('/clear-notifications', function () {
-    session(['notifications' => []]); // Xóa tất cả thông báo trong session
-    return response()->json(['success' => true]);
-});
+    // Xóa thông báo từ session
+    session(['notifications' => []]);
+
+    return response()->json([
+        'success' => true,
+    ]);
+})->name('clear-notifications');

@@ -8,12 +8,11 @@
     </div>
 
     <div class="rightbar-content h-100" data-simplebar="">
-
         <div class="p-3">
             <div style="max-height: 230px; max-width: 100%; overflow: auto; white-space: nowrap;" data-simplebar>
-                <div id="notifications-list">
+                <div id="right-sidebar-notifications-list">
                     <?php
-                    $notificationCount = count($notifications); // Đếm số lượng thông báo để kiểm soát <hr>
+                    $notificationCount = count($notifications); // Đếm số lượng thông báo
                     ?>
 
                     <?php if ($notificationCount > 0): ?>
@@ -27,7 +26,6 @@
                     <hr>
                     <?php endif; ?>
                     <?php endforeach; ?>
-
                     <?php else: ?>
                     <p class="dropdown-item text-center notify-item notify-all">Không có thông báo nào</p>
                     <?php endif; ?>

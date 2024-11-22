@@ -48,17 +48,26 @@ class ForgotPasswordController extends Controller
 
     public function showResetForm($token)
     {
-        return view('admin.auth.reset-password', ['token' => $token]);
+        // Khai báo title
+        $this->title = 'Admin - Reset Password';
+
+        return view('admin.auth.reset-password', ['token' => $token])
+            ->with('title', $this->title);
     }
 
     public function reset(Request $request)
     {
+        // Xác thực dữ liệu đầu vào
         $request->validate([
             'token' => 'required',
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|same:password'
+        ], [
+            'password_confirmation.same' => 'Mật khẩu xác nhận không khớp với mật khẩu mới.',
         ]);
 
+        // Kiểm tra token reset password
         $reset = DB::table('password_reset_tokens')->where('email', $request->email)->first();
 
         if (!$reset || !Hash::check($request->token, $reset->token)) {

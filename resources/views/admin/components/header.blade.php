@@ -5,28 +5,40 @@
             <i class="dripicons-search noti-icon"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
-            <form class="p-3" action="" method="GET">
+            <form class="p-3" action="{{ route('search') }}" method="GET">
                 <input type="text" name="query" class="form-control" placeholder="Tìm kiếm chức năng..." required
                     aria-label="Recipient's username">
             </form>
 
         </div>
     </li>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- Dropdown thông báo -->
     <li class="dropdown notification-list">
         <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
             aria-haspopup="false" aria-expanded="false">
             <i class="dripicons-bell noti-icon"></i>
 
             <?php
-            $notifications = session('notifications', []);
-            $notificationCount = count($notifications);
-            ?>
+    $notifications = session('notifications', []);
+    $notificationCount = count($notifications);
+    ?>
 
             <?php if ($notificationCount > 0): ?>
-            <span class="badge bg-success"><?php echo $notificationCount; ?></span>
+            <span id="notification-count" class="badge bg-success"><?php echo $notificationCount; ?></span>
+            <?php else: ?>
+            <span id="notification-count" class="badge" style="display:none;"></span>
             <?php endif; ?>
+            <style>
+            /* Hiệu ứng fade-out */
+            .fade-out {
+                opacity: 0;
+                transition: opacity 0.5s ease-out;
+            }
+            </style>
         </a>
+
 
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg">
             <div class="dropdown-item noti-title">
@@ -39,15 +51,10 @@
                 </h5>
             </div>
 
-            <!-- Thay đổi phần này để hỗ trợ cuộn -->
             <div style="max-height: 230px; overflow-y: auto;" data-simplebar>
                 <div id="notifications-list">
-                    <?php
-                    // Đảo ngược mảng thông báo để hiển thị thông báo mới nhất lên trên cùng
-                    $notifications = array_reverse($notifications);
-                    ?>
                     <?php if ($notificationCount > 0): ?>
-                    <?php foreach ($notifications as $notification): ?>
+                    <?php foreach (array_reverse($notifications) as $notification): ?>
                     <p
                         class="dropdown-item text-center notify-item <?php echo $notification['type'] === 'success' ? 'text-success' : 'text-danger'; ?>">
                         <?php echo e($notification['message']); ?>
@@ -63,16 +70,17 @@
                 class="dropdown-item text-center text-primary notify-item notify-all end-bar-toggle">
                 Xem Tất Cả
             </a>
-
         </div>
     </li>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const clearNotificationsButton = document.getElementById('clear-notifications');
         const notificationsList = document.getElementById('notifications-list');
-        const noNotificationsMessage = document.querySelector('.notify-all');
-        const notificationBadge = document.querySelector('.badge'); // Thẻ badge hiển thị số lượng thông báo
+        const rightSidebarNotificationsList = document.getElementById('right-sidebar-notifications-list');
+        const notificationBadge = document.getElementById(
+            'notification-count'); // Đã sửa thành id "notification-count"
 
         clearNotificationsButton.addEventListener('click', function() {
             // Gửi yêu cầu xóa tất cả thông báo
@@ -80,34 +88,44 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Đảm bảo thêm CSRF token nếu đang sử dụng Laravel
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .content // Lấy CSRF token từ meta
                     }
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Xóa tất cả thông báo hiện tại
-                        notificationsList.innerHTML = '';
+                        // Cập nhật dropdown thông báo
+                        notificationsList.innerHTML = `
+                    <p class="dropdown-item text-center notify-item notify-all">Không có thông báo nào</p>
+                `;
 
-                        // Hiển thị thông báo "Không có thông báo nào"
-                        noNotificationsMessage.textContent = "Không có thông báo nào";
-                        noNotificationsMessage.style.display = 'block';
+                        // Cập nhật Right Sidebar
+                        rightSidebarNotificationsList.innerHTML = `
+                    <p class="dropdown-item text-center notify-item notify-all">Không có thông báo nào</p>
+                `;
 
-                        // Cập nhật số lượng thông báo về trạng thái mặc định (ẩn thẻ span nếu không có thông báo)
-                        notificationBadge.style.display = 'none'; // Ẩn thẻ badge
+                        // Áp dụng hiệu ứng fade-out cho badge
+                        notificationBadge.classList.add('fade-out');
+
+                        // Sau khi hiệu ứng fade-out kết thúc (0.5s), ẩn badge
+                        setTimeout(() => {
+                            notificationBadge.style.display = 'none';
+                        }, 400); // Đợi 0.4s để hiệu ứng hoàn thành
+                    } else {
+                        console.error('Failed to clear notifications.');
                     }
                 })
                 .catch(error => console.error('Error:', error));
         });
 
-        // Cập nhật hiển thị badge khi trang được tải
-        if (<?php echo $notificationCount; ?> === 0) {
-            notificationBadge.style.display = 'none'; // Ẩn thẻ span nếu không có thông báo
-        } else {
-            notificationBadge.style.display = 'inline-block'; // Hiển thị thẻ span nếu có thông báo
+        // Kiểm tra và ẩn badge nếu không có thông báo
+        if (parseInt(notificationBadge?.textContent || '0') === 0) {
+            notificationBadge.style.display = 'none';
         }
     });
     </script>
+
 
 
     <li class="dropdown notification-list d-none d-sm-inline-block">

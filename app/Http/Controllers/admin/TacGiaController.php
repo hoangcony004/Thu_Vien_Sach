@@ -45,7 +45,16 @@ class TacGiaController extends Controller
             ->with('query', $query);
     }
 
+    public function getAPITacGia(Request $request)
+    {
+        $search = $request->input('q'); // Lấy từ khóa tìm kiếm
+        $tacGias = TacGia::where('tenTacGia', 'LIKE', "%$search%")
+            ->take(10) // Giới hạn số lượng kết quả trả về
+            ->get(['id', 'tenTacGia']); // Chỉ lấy cột cần thiết
 
+        return response()->json($tacGias);
+    }
+    
     public function postAddTacGia(Request $request)
     {
         // Validate dữ liệu đầu vào

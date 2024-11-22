@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('nha_xuat_ban', function (Blueprint $table) {
             $table->id();
             $table->string('tenNhaXuatBan');
-            $table->string('soDienThoai');
-            $table->string('email');
+            $table->string('soDienThoai')->unique();
+            $table->string('email')->unique();
             $table->string('diaChi');
             $table->timestamps();
         });

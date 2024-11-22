@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sach', function (Blueprint $table) {
             $table->id();
-            $table->string('maSach');
+            $table->string('maSach')->unique();
             $table->foreignId('maTacGia')->constrained('tac_gia');
             $table->foreignId('maTheLoai')->constrained('the_loai');
             $table->foreignId('maNhaXuatBan')->constrained('nha_xuat_ban');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-    
+
 
     /**
      * Reverse the migrations.

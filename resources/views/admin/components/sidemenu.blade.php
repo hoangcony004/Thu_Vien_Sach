@@ -24,7 +24,7 @@
         <div class="collapse" id="sidebarEcommerce">
             <ul class="side-nav-second-level">
                 <li>
-                    <a href="{{ route('books') }}">Kho Sách</a>
+                    <a href="{{ route('sach') }}">Kho Sách</a>
                 </li>
                 <li>
                     <a href="{{ route('tacgia') }}">Tác Giả</a>
@@ -47,20 +47,20 @@
             </ul>
         </div>
 
-        <!-- <li class="side-nav-item">
+    <li class="side-nav-item">
         <a data-bs-toggle="collapse" href="#sidebarProjects" aria-expanded="false" aria-controls="sidebarProjects"
             class="side-nav-link">
-            <i class="mdi mdi-plus-circle me-2"></i>
-            <span> Thêm Mới </span>
+            <i class="dripicons-menu"></i>
+            <span> Quản Lý Mượn Sách</span>
             <span class="menu-arrow"></span>
         </a>
         <div class="collapse" id="sidebarProjects">
             <ul class="side-nav-second-level">
                 <li>
-                    <a href="">Thêm Người Dùng Mới</a>
+                    <a href="#">Thêm Người Dùng Mới</a>
                 </li>
                 <li>
-                    <a href="">Thêm Lớp Học Mới</a>
+                    <a href="#">Thêm Lớp Học Mới</a>
                 </li>
                 <li>
                     <a href="#">Thêm Liên Hệ</a>
@@ -75,9 +75,9 @@
                 </li>
             </ul>
         </div>
-    </li> -->
+    </li>
 
-        <!-- <li class="side-nav-item">
+    <!-- <li class="side-nav-item">
         <a data-bs-toggle="collapse" href="#sidebarMultiLevel" aria-expanded="false" aria-controls="sidebarMultiLevel"
             class="side-nav-link">
             <i class="dripicons-graduation"></i>

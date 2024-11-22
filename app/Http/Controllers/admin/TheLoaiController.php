@@ -34,6 +34,16 @@ class TheLoaiController extends Controller
             ->with('theloaiList', $theloaiList);
     }
 
+    public function getAPITheLoai(Request $request)
+    {
+        $search = $request->input('q'); // Lấy từ khóa tìm kiếm
+        $theLoais = TheLoai::where('tenTheLoai', 'LIKE', "%$search%")
+            ->take(10) // Giới hạn số lượng kết quả trả về
+            ->get(['id', 'tenTheLoai']); // Chỉ lấy cột cần thiết
+
+        return response()->json($theLoais);
+    }
+
     public function postAddTheLoai(Request $request)
     {
         try {

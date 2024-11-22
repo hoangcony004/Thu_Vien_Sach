@@ -25,7 +25,7 @@
                     <div class="col-sm-4">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#staticBackdrop"><i class="mdi mdi-plus-circle me-2"></i>
-                            Thêm Sách Mới
+                            Thêm Nhà Xuất Bản
                         </button>
                     </div>
                     <div class="col-sm-8">
@@ -36,13 +36,8 @@
                             <!-- <button type="button" class="btn btn-success mb-2">Xuất Excel</button> -->
 
                             <form action="" method="GET" class="d-flex justify-content-end">
-                                <select name="criteria" class="form-select form-select-sm me-2"
-                                    style="max-width: 150px;">
-                                    <option value="Id">Mã Sách</option>
-                                    <option value="tenDayDu">Tên Sách</option>
-                                </select>
                                 <input type="search" name="query" class="form-control form-control-sm me-2"
-                                    placeholder="Tìm kiếm sách..." style="max-width: 200px;">
+                                    placeholder="Tìm kiếm nhà xuất bản..." style="max-width: 200px;">
                                 <button class="btn btn-primary btn-sm" type="submit">Tìm kiếm</button>
                             </form>
                         </div>
@@ -59,16 +54,16 @@
                                         <label class="form-check-label" for="customCheck1">&nbsp;</label>
                                     </div>
                                 </th>
-                                <th class="all">Product</th>
-                                <th>Category</th>
-                                <th>Added Date</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Status</th>
+                                <th>STT</th>
+                                <th class="all">Tên Nhà Xuất Bản</th>
+                                <th>Số Điện thoại</th>
+                                <th>Email</th>
+                                <th>Địa Chỉ</th>
                                 <th style="width: 85px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($nhaxuatbanList as $index => $nhaxuatban)
                             <tr>
                                 <td>
                                     <div class="form-check">
@@ -76,58 +71,44 @@
                                         <label class="form-check-label" for="customCheck2">&nbsp;</label>
                                     </div>
                                 </td>
-                                <td>
-                                    <img src="assets/images/products/product-1.jpg" alt="contact-img"
-                                        title="contact-img" class="rounded me-3" height="48">
-                                    <p class="m-0 d-inline-block align-middle font-16">
-                                        <a href="apps-ecommerce-products-details.html" class="text-body">Amazing Modern
-                                            Chair</a>
-                                        <br>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                        <span class="text-warning mdi mdi-star"></span>
-                                    </p>
-                                </td>
-                                <td>
-                                    Aeron Chairs
-                                </td>
-                                <td>
-                                    09/12/2018
-                                </td>
-                                <td>
-                                    $148.66
-                                </td>
+                                <!-- Nếu dùng paginate(), thêm firstItem() để đánh số theo trang -->
+                                <td>{{ $nhaxuatbanList->firstItem() + $index }}</td>
 
-                                <td>
-                                    254
-                                </td>
-                                <td>
-                                    <span class="badge bg-success">Active</span>
-                                </td>
+                                <td>{{ $nhaxuatban->tenNhaXuatBan }}</td>
+                                <td>{{ $nhaxuatban->soDienThoai }}</td>
+                                <td>{{ $nhaxuatban->email }}</td>
+                                <td>{{ $nhaxuatban->diaChi }}</td>
 
                                 <td class="table-action">
-                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                    <a href="javascript:void(0);" class="action-icon"> <i
-                                            class="mdi mdi-square-edit-outline"></i></a>
-                                    <a href="javascript:void(0);" class="action-icon"> <i
-                                            class="mdi mdi-delete"></i></a>
+                                    <!-- Thẻ a cho nút sửa -->
+                                    <a href="{{ route('editNhaXuatBan', ['id' => $nhaxuatban->id]) }}"
+                                        class="action-icon">
+                                        <i class="mdi mdi-square-edit-outline"></i>
+                                    </a>
+
+                                    <!-- Thẻ a để mở modal và truyền id -->
+                                    <a href="#" class="action-icon" data-id="{{ $nhaxuatban->id }}"
+                                        data-bs-toggle="modal" data-bs-target="#danger-header-modal">
+                                        <i class="mdi mdi-delete"></i>
+                                    </a>
                                 </td>
                             </tr>
+                            @endforeach
 
                         </tbody>
                     </table>
                 </div>
             </div> <!-- end card-body-->
+            @if($nhaxuatbanList->hasPages())
+            <x-pagination :paginator="$nhaxuatbanList" />
+            @endif
         </div> <!-- end card-->
     </div> <!-- end col -->
 </div>
 
 <!-- Modal -->
-
+@include('admin.partials.nhaxuatban.form-add-nha-xuat-ban')
+@include('admin.partials.nhaxuatban.form-delete-nha-xuat-ban')
 <!-- end modal-->
-
-
 
 @endsection
